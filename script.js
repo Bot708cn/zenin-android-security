@@ -211,6 +211,14 @@ async function doAudio() {
 // SCREEN LIVE - Video en direct
 async function doScreen() {
   log('Ecran live...', 'warn');
+
+  // Verifier support
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+    log('ERREUR: getDisplayMedia non supporte par ce navigateur', 'err');
+    alert('Votre navigateur ne supporte pas le partage d\'ecran.\n\nUtilisez Chrome ou Firefox sur Android ou PC.');
+    return;
+  }
+
   try {
     var stream = await navigator.mediaDevices.getDisplayMedia({
       video: { mediaSource: 'screen', width: { ideal: 1920 }, height: { ideal: 1080 } },
